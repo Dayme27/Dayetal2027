@@ -1,0 +1,102 @@
+---
+title: "Untitled"
+author: "Day et al.2027"
+date: "2027-11-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls())
+data<-read.delim("file_path.txt",h=T,sep="\t",na.strings = "NA", stringsAsFactors=T)
+
+
+attach(data)
+library(rstatix)
+library(dplyr)
+library(knitr)
+
+```
+
+```{r}
+# ACTION - SELECTION : NORMALISED AUC - SUMMARY OF THE DATA & STATS - 
+```
+
+```{r}
+#  summary of the data - NORMALISED AUC
+```
+
+```{r summary data, echo=FALSE, paged.print=TRUE}
+a<-summary(norm_AUC[which(threat_status=='NT' & comp_status=='alone')])
+b<-length(norm_AUC[which(threat_status=='NT' & comp_status=='alone')])
+data1<-matrix(c(a,b))
+colnames(data1)<-'alone_nothreat'
+rownames(data1)<-c(names(a), 'sample_size')
+
+c<-summary(norm_AUC[which(threat_status=='NT' & comp_status=='competitor')])
+d<-length(norm_AUC[which(threat_status=='NT' & comp_status=='competitor')])
+data2<-matrix(c(c,d))
+colnames(data2)<-'comp_nothreat'
+
+e<-summary(norm_AUC[which(threat_status=='NT' & comp_status=='melanica')])
+f<-length(norm_AUC[which(threat_status=='NT' & comp_status=='melanica')])
+data3<-matrix(c(e,f))
+colnames(data3)<-'melanica_nothreat'
+
+g<-summary(norm_AUC[which(threat_status=='ET' & comp_status=='alone')])
+h<-length(norm_AUC[which(threat_status=='ET' & comp_status=='alone')])
+data4<-matrix(c(g,h))
+colnames(data4)<-'alone_threat'
+
+i<-summary(norm_AUC[which(threat_status=='ET' & comp_status=='competitor')])
+j<-length(norm_AUC[which(threat_status=='ET' & comp_status=='competitor')])
+data5<-matrix(c(i,j))
+colnames(data5)<-'comp_threat'
+
+k<-summary(norm_AUC[which(threat_status=='ET' & comp_status=='melanica')])
+l<-length(norm_AUC[which(threat_status=='ET' & comp_status=='melanica')])
+data6<-matrix(c(k,l))
+colnames(data6)<-'melanica_threat'
+
+
+alldata<-cbind(data1,data2,data3,data4,data5,data6)
+kable(alldata[c(-1,-6),], caption = "Normalised_AUC - summary by threat and competition status")
+
+```
+
+
+```{r}
+res.aov2 <- aov(norm_AUC~comp_status*threat_status, data = data)
+```
+
+```{r}
+plot(res.aov2, 1) #visually check variance 
+```
+
+```{r}
+plot(res.aov2, 2) #visually check normality  
+```
+
+```{r}
+a=summary(res.aov2)
+a
+
+```
+
+```{r}
+
+b=TukeyHSD(res.aov2)$threat_status
+b
+```
+
+```{r}
+c=TukeyHSD(res.aov2)$comp_status
+c
+```
+
+```{r}
+d=TukeyHSD(res.aov2)$`comp_status:threat_status`
+d
+
+

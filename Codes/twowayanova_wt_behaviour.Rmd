@@ -1,0 +1,166 @@
+---
+title: "Untitled"
+author: "Day et al.2027"
+date: "2026-11-21"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+rm(list=ls())
+data<-read.delim("file_name.txt",h=T,sep="\t",na.strings = "NA", stringsAsFactors=T)
+
+
+attach(data)
+library(rstatix)
+library(dplyr)
+library(knitr)
+
+```
+
+```{r}
+# ACTION - SELECTION : COURTSHIP INDEX - SUMMARY OF THE DATA & STATS - 
+```
+
+```{r}
+#  summary of the data - COURTSHIP INDEX (CI)
+```
+
+```{r summary data, echo=FALSE, paged.print=TRUE}
+a<-summary(CI[which(threat_status=='NT' & comp_status=='alone')])
+b<-length(CI[which(threat_status=='NT' & comp_status=='alone')])
+data1<-matrix(c(a,b))
+colnames(data1)<-'alone_nothreat'
+rownames(data1)<-c(names(a), 'sample_size')
+
+c<-summary(CI[which(threat_status=='NT' & comp_status=='competitor')])
+d<-length(CI[which(threat_status=='NT' & comp_status=='competitor')])
+data2<-matrix(c(c,d))
+colnames(data2)<-'compet_nothreat'
+
+g<-summary(CI[which(threat_status=='ET' & comp_status=='alone')])
+h<-length(CI[which(threat_status=='ET' & comp_status=='alone')])
+data4<-matrix(c(g,h))
+colnames(data4)<-'alone_threat'
+
+i<-summary(CI[which(threat_status=='ET' & comp_status=='competitor')])
+j<-length(CI[which(threat_status=='ET' & comp_status=='competitor')])
+data5<-matrix(c(i,j))
+colnames(data5)<-'compet_threat'
+
+
+alldata<-cbind(data1,data2,data4,data5)
+kable(alldata[c(-1,-6),], caption = "Courtship index - summary by threat and competition status")
+
+```
+
+
+```{r}
+res.aov2 <- aov(CI~comp_status*threat_status, data = data)
+```
+
+```{r}
+plot(res.aov2, 1) #visually check variance 
+```
+
+```{r}
+plot(res.aov2, 2) #visually check normality  
+```
+
+```{r}
+a=summary(res.aov2)
+a
+
+```
+
+```{r}
+
+b=TukeyHSD(res.aov2)$threat_status
+b
+```
+
+```{r}
+c=TukeyHSD(res.aov2)$comp_status
+c
+```
+
+```{r}
+d=TukeyHSD(res.aov2)$`comp_status:threat_status`
+d
+```
+
+
+
+```{r}
+# ACTION - SELECTION : DECINSIVE INDEX - SUMMARY OF THE DATA & STATS - 
+```
+
+```{r}
+#  summary of the data - DECINSIVE INDEX (CI)
+```
+
+
+```{r summary data, echo=FALSE, paged.print=TRUE}
+a<-summary(DI[which(threat_status=='NT' & comp_status=='alone')])
+b<-length(DI[which(threat_status=='NT' & comp_status=='alone')])
+data1<-matrix(c(a,b))
+colnames(data1)<-'alone_nothreat'
+rownames(data1)<-c(names(a), 'sample_size')
+
+c<-summary(DI[which(threat_status=='NT' & comp_status=='competitor')])
+d<-length(DI[which(threat_status=='NT' & comp_status=='competitor')])
+data2<-matrix(c(c,d))
+colnames(data2)<-'compet_nothreat'
+
+
+g<-summary(DI[which(threat_status=='ET' & comp_status=='alone')])
+h<-length(DI[which(threat_status=='ET' & comp_status=='alone')])
+data4<-matrix(c(g,h))
+colnames(data4)<-'alone_threat'
+
+i<-summary(DI[which(threat_status=='ET' & comp_status=='competitor')])
+j<-length(DI[which(threat_status=='ET' & comp_status=='competitor')])
+data5<-matrix(c(i,j))
+colnames(data5)<-'compet_threat'
+
+alldata<-cbind(data1,data2,data4,data5)
+kable(alldata[c(-1,-6),], caption = "Defensive index - summary by threat and competition status")
+
+```
+
+
+
+```{r}
+res.aov3 <- aov(DI~comp_status*threat_status, data = data)
+```
+
+```{r}
+plot(res.aov3, 1) #visually check variance 
+```
+
+```{r}
+plot(res.aov3, 2) #visually check normality  
+```
+
+```{r}
+e=summary(res.aov3)
+e
+```
+
+```{r}
+f=TukeyHSD(res.aov3)$threat_status
+f
+```
+
+```{r}
+g=TukeyHSD(res.aov3)$comp_status
+g
+```
+
+```{r}
+h=TukeyHSD(res.aov3)$`comp_status:threat_status`
+h
+```
+
